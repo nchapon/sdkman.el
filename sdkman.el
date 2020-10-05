@@ -35,14 +35,6 @@
    (directory-files sdkman-candidates-base-dir)))
 
 
-(defun sdk--save-env ()
-Store original PATH and JAVA_HOME.
-(when (not (boundp 'SW_JAVA_PATH))
-  (setq SW_JAVA_PATH (getenv "PATH")))
-(when (not (boundp 'SW_JAVA_HOME))
-  (setq SW_JAVA_HOME (getenv "JAVA_HOME"))))
-
-
 (defun sdk-use-java ()
   "List the installed JDKs and enable to switch the JDK in use."
   (interactive)
@@ -56,21 +48,7 @@ Store original PATH and JAVA_HOME.
               nil t "")))
     ;; switch java version
     (setenv "JAVA_HOME" (concat sdkman-candidates-base-dir "/" ver))
-    (setenv "PATH" (concat (concat (getenv "JAVA_HOME") "/bin/java")
-                           ":" SW_JAVA_PATH)))
-  ;; show version
-  (sdk-current))
-
-
-(defun sdk-default ()
-  "Restore the default Java version."
-  (interactive)
-  ;; store original PATH and JAVA_HOME
-  (sdk--save-env)
-
-  ;; switch java version
-  (setenv "JAVA_HOME" SW_JAVA_HOME)
-  (setenv "PATH" SW_JAVA_PATH)
+    (setenv "PATH" (concat (getenv "JAVA_HOME") "/bin/java")))
   ;; show version
   (sdk-current))
 
@@ -79,7 +57,7 @@ Store original PATH and JAVA_HOME.
   "Display the current version selected Java version."
   (interactive)
   ;; displays current java version
-  (message (concat "Java HOME: " (getenv "JAVA_HOME"))))
+  (message (shell-command-to-string "sdk current java")))
 
 
 (provide 'sdkman)
