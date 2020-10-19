@@ -38,8 +38,6 @@
 (defun sdk-use-java ()
   "List the installed JDKs and enable to switch the JDK in use."
   (interactive)
-  ;; store original PATH and JAVA_HOME
-  (sdk--save-env)
 
   (let ((ver (completing-read
               "Which Java: "
@@ -47,17 +45,17 @@
                (lambda (e i) (list e i)) (sdk--versions))
               nil t "")))
     ;; switch java version
-    (setenv "JAVA_HOME" (concat sdkman-candidates-base-dir "/" ver))
+    (setenv "JAVA_HOME" (expand-file-name (concat sdkman-candidates-base-dir "/" ver)))
     (setenv "PATH" (concat (getenv "JAVA_HOME") "/bin/java")))
   ;; show version
   (sdk-current))
 
 
 (defun sdk-current ()
-  "Display the current version selected Java version."
+  "Display the current selected Java version."
   (interactive)
   ;; displays current java version
-  (message (shell-command-to-string "sdk current java")))
+  (message (shell-command-to-string (concat "realpath " (getenv "JAVA_HOME")))))
 
 
 (provide 'sdkman)
