@@ -25,6 +25,10 @@
   :type 'string
   :safe 'stringp)
 
+
+(setq sdkman-init-shell "~/.sdkman/bin/sdkman-init.sh")
+
+
 ;;
 ;; This function returns the list of installed
 ;;
@@ -46,7 +50,7 @@
               nil t "")))
     ;; switch java version
     (setenv "JAVA_HOME" (expand-file-name (concat sdkman-candidates-base-dir "/" ver)))
-    (setenv "PATH" (concat (getenv "JAVA_HOME") "/bin/java")))
+    (eshell/addpath (concat (getenv "JAVA_HOME") "/bin/java")))
   ;; show version
   (sdk-current))
 
@@ -55,7 +59,14 @@
   "Display the current selected Java version."
   (interactive)
   ;; displays current java version
-  (message (shell-command-to-string (concat "realpath " (getenv "JAVA_HOME")))))
+  (message (sdk-command "sdk current java")))
+
+
+(defun sdk-command (cmd)
+    "DOCSTRING"
+  (interactive)
+  (shell-command-to-string (concat "source " (expand-file-name sdkman-init-shell) " && " cmd)))
+
 
 
 (provide 'sdkman)
