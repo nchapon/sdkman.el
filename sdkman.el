@@ -26,7 +26,7 @@
     (setenv "JAVA_HOME" (expand-file-name (concat JAVA_BASE "/" ver)))
     (setenv "PATH" (concat (getenv "JAVA_HOME") "/bin/java")))
 
-  (sdk-current))
+  (sdk-current-java))
 
 (defun sdk-current-java ()
   (interactive)
